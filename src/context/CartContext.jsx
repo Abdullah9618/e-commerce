@@ -1,6 +1,6 @@
 // src/context/CartContext.jsx
-import React, { createContext, useState, useContext } from "react";
-import { db } from "../firebase";
+import React, { createContext, useContext, useReducer } from "react";
+import { db } from "../services/firebase";
 import { collection, addDoc } from "firebase/firestore";
 
 const CartContext = createContext();
@@ -8,56 +8,60 @@ const CartContext = createContext();
 export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
+  const initialState = { cartItems: [] };
 
-  // Add product to cart
-  const addToCart = (product) => {
-  setCartItems((prev) => {
-    const existing = prev.find((item) => item.id === product.id);
-    if (existing) {
-      return prev.map((item) =>
-        item.id === product.id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      );
-    } else {
-      // Include category when adding to cart
-      return [...prev, { ...product, quantity: 1, category: product.category || "N/A" }];
+  function cartReducer(state, action) {
+    switch (action.type) {
+      case "ADD": {
+        const product = action.payload;
+        const existing = state.cartItems.find((i) => i.id === product.id);
+        if (existing) {
+          return {
+            ...state,
+            cartItems: state.cartItems.map((item) =>
+              item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+            ),
+          };
+        }
+        return {
+          ...state,
+          cartItems: [...state.cartItems, { ...product, quantity: 1, category: product.category || "N/A" }],
+        };
+      }
+      case "REMOVE":
+        return { ...state, cartItems: state.cartItems.filter((i) => i.id !== action.payload) };
+      case "UPDATE_QTY":
+        return {
+          ...state,
+          cartItems: state.cartItems.map((item) => (item.id === action.payload.id ? { ...item, quantity: action.payload.quantity } : item)),
+        };
+      case "CLEAR":
+        return { ...state, cartItems: [] };
+      case "SET":
+        return { ...state, cartItems: action.payload };
+      default:
+        return state;
     }
-  });
-};
-  // Remove product from cart
-  const removeFromCart = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-  };
+  }
 
-  // Update quantity of a product
-  const updateQuantity = (id, quantity) => {
-    setCartItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, quantity } : item))
-    );
-  };
+  const [state, dispatch] = useReducer(cartReducer, initialState);
 
-  // Clear the entire cart
-  const clearCart = () => {
-    setCartItems([]);
-  };
+  const addToCart = (product) => dispatch({ type: "ADD", payload: product });
+  const removeFromCart = (id) => dispatch({ type: "REMOVE", payload: id });
+  const updateQuantity = (id, quantity) => dispatch({ type: "UPDATE_QTY", payload: { id, quantity } });
+  const clearCart = () => dispatch({ type: "CLEAR" });
 
-  // Calculate subtotal
-  const getSubtotal = () => {
-    return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  };
+  const getSubtotal = () => state.cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  // Place order in Firebase
   const placeOrder = async (userInfo) => {
     try {
       await addDoc(collection(db, "orders"), {
-        userInfo,          // includes name, email, contact, address
-        products: cartItems, 
+        userInfo,
+        products: state.cartItems,
         total: getSubtotal(),
         createdAt: new Date(),
       });
-      clearCart(); // Clear cart after successful order
+      clearCart();
       alert("Order placed successfully!");
     } catch (err) {
       console.error("Error placing order:", err);
@@ -66,7 +70,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const value = {
-    cartItems,
+    cartItems: state.cartItems,
     addToCart,
     removeFromCart,
     updateQuantity,

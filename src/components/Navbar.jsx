@@ -13,7 +13,7 @@ function Navbar() {
         {/* Top row: Logo + Search + Cart */}
         <div className="flex items-center space-x-4">
           <Link to="/">
-            <img src={logo} alt="Biolife Logo" className="h-12" />
+            <img src={logo} alt="Biolife Logo" className="h-2" />
           </Link>
 
           <div className="flex-1 flex">

@@ -1,6 +1,6 @@
 // src/pages/Checkout.jsx
 import React, { useState } from "react";
-import { db } from "../firebase";
+import { db } from "../services/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useCart } from "../context/CartContext";
 import { useNavigate, useLocation } from "react-router-dom";

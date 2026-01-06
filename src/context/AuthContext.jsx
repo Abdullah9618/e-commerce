@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { auth, db } from "../firebase";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
+import { auth, db } from "../services/firebase";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -14,22 +14,37 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const initialState = { user: null, loading: true };
+
+  function authReducer(state, action) {
+    switch (action.type) {
+      case "SET_USER":
+        return { ...state, user: action.payload };
+      case "SET_LOADING":
+        return { ...state, loading: action.payload };
+      default:
+        return state;
+    }
+  }
+
+  const [state, dispatch] = useReducer(authReducer, initialState);
 
   useEffect(() => {
     // FIXED: Correct modular usage
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-        setUser({
-          email: currentUser.email,
-          uid: currentUser.uid,
-          name: currentUser.displayName || null,
+        dispatch({
+          type: "SET_USER",
+          payload: {
+            email: currentUser.email,
+            uid: currentUser.uid,
+            name: currentUser.displayName || null,
+          },
         });
       } else {
-        setUser(null);
+        dispatch({ type: "SET_USER", payload: null });
       }
-      setLoading(false);
+      dispatch({ type: "SET_LOADING", payload: false });
     });
 
     return unsubscribe;
@@ -60,11 +75,10 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     await signOut(auth);
-    setUser(null);
+    dispatch({ type: "SET_USER", payload: null });
   };
-
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user: state.user, login, register, logout, loading: state.loading }}>
       {children}
     </AuthContext.Provider>
   );

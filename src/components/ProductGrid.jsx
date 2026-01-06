@@ -1,40 +1,64 @@
 import React, { useEffect, useState } from "react";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../services/firebase";
+import app from "../services/firebase";
 
 import FilterListIcon from "@mui/icons-material/FilterList";
 import ClearIcon from "@mui/icons-material/Clear";
 
 import ProductCard from "./ProductCard";
+import Loading from "./Loading";
 
 function ProductGrid() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   // Fetch products + categories
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+      setError("");
+      // Debug: log which Firebase project we're connected to
       try {
-        // Fetch products
-        const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
-        const prodSnap = await getDocs(q);
+        console.log("[ProductGrid] Firebase projectId:", app?.options?.projectId || "<no-app>");
+      } catch (e) {
+        console.warn("[ProductGrid] Could not read app options:", e);
+      }
+      try {
+        // Try ordered fetch first (may require index)
+        try {
+          const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+          const prodSnap = await getDocs(q);
+          const productList = prodSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+          setProducts(productList);
+          console.log("[ProductGrid] fetched products (ordered):", productList.length);
+        } catch (orderedErr) {
+          // Fallback to unordered fetch if ordered query fails
+          console.warn("Ordered query failed, retrying without order:", orderedErr);
+          const prodSnap = await getDocs(collection(db, "products"));
+          const productList = prodSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+          setProducts(productList);
+          console.log("[ProductGrid] fetched products (fallback):", productList.length);
+        }
 
-        const productList = prodSnap.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setProducts(productList);
-
-        // Fetch categories
-        const catSnap = await getDocs(collection(db, "categories"));
-        const categoryList = catSnap.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setCategories(categoryList);
-      } catch (error) {
-        console.error("Error fetching:", error);
+        // Fetch categories (separate try so products still show if categories fail)
+        try {
+          const catSnap = await getDocs(collection(db, "categories"));
+          const categoryList = catSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+          setCategories(categoryList);
+          console.log("[ProductGrid] fetched categories:", categoryList.length);
+        } catch (catErr) {
+          console.warn("Failed to load categories:", catErr);
+        }
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError("Failed to load products. Check console for details.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -46,6 +70,8 @@ function ProductGrid() {
     selectedCategory === ""
       ? products
       : products.filter((p) => p.category === selectedCategory);
+
+  if (loading) return <Loading message="Loading products..." />;
 
   return (
     <div className="max-w-7xl mx-auto p-4">
@@ -89,6 +115,9 @@ function ProductGrid() {
 
 
       {/* Product Grid */}
+      {error && (
+        <p className="text-red-500 mb-4 text-center">{error}</p>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (

@@ -1,4 +1,3 @@
-import React from "react";
 import lemonImg from "../assets/images/p-07.jpg";
 import {Link} from 'react-router-dom'
 function Banner() {

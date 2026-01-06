@@ -1,5 +1,3 @@
-import React from "react";
-
 function AuthInput({ label, type = "text", value, onChange }) {
   return (
     <div className="mb-4">

@@ -29,6 +29,8 @@ import Categories from "./pages/admin/Categories"; // New categories page
 import AdminLayout from "./components/AdminLayout";
 
 import { useAuth } from "./context/AuthContext";
+import ErrorBoundary from "./components/ErrorBoundary";
+import Loading from "./components/Loading";
 
 // Layout wrapper: shows user header/navbar only on non-admin pages
 const Layout = ({ children }) => {
@@ -44,7 +46,7 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-// Admin protected route
+// Admin protected route (uses localStorage for simplicity; consider custom claims for production)
 const ProtectedAdmin = ({ children }) => {
   const isAdmin = localStorage.getItem("adminLoggedIn") === "true";
   if (!isAdmin) return <Navigate to="/admin-login" />;
@@ -52,10 +54,15 @@ const ProtectedAdmin = ({ children }) => {
 };
 
 function App() {
+  const { loading } = useAuth();
+
+  if (loading) return <Loading message="Initializing..." />;
+
   return (
     <Router>
-      <Layout>
-        <Routes>
+      <ErrorBoundary>
+        <Layout>
+          <Routes>
           {/* User Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<ProductGrid />} />
@@ -119,8 +126,9 @@ function App() {
               </div>
             }
           />
-        </Routes>
-      </Layout>
+          </Routes>
+        </Layout>
+      </ErrorBoundary>
     </Router>
   );
 }

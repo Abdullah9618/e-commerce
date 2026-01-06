@@ -5,7 +5,7 @@ import AuthInput from "../components/AuthInput";
 import AuthLayout from "../components/AuthLayout";
 import { useAuth } from "../context/AuthContext";
 import { sendPasswordResetEmail, confirmPasswordReset } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../services/firebase";
 
 function Login({ isModal = false, closeModal, switchToRegister, redirectAfterLogin }) {
   const { login } = useAuth();

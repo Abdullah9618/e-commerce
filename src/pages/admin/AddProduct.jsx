@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { db } from "../../firebase";
+import { db } from "../../services/firebase";
 import { collection, addDoc, getDocs, serverTimestamp } from "firebase/firestore";
 import axios from "axios";
 import { Box, TextField, Button, Typography, MenuItem } from "@mui/material";

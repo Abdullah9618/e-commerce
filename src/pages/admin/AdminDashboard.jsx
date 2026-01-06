@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { AddBox, Inventory, People, ShoppingCart, LocationOn, AccessTime, Thermostat } from "@mui/icons-material";
 
-import { db } from "../../firebase";
+import { db } from "../../services/firebase";
 import { collection, getDocs } from "firebase/firestore";
 
 const drawerWidth = 240;
