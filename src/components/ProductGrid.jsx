@@ -80,7 +80,7 @@ function ProductGrid() {
 
       {/* ⭐ Filter Bar */}
     {/* ⭐ Filter Bar */}
-<div className="flex items-center gap-4 p-4 border rounded-sm shadow-sm bg-white mb-6">
+<div className="flex items-center gap-4 p-4 border-2 border-blue-200 rounded-lg shadow-md bg-gradient-to-r from-blue-50 to-white mb-6">
 
   <FilterListIcon className="text-blue-600" sx={{ fontSize: 28 }} />
 
@@ -89,7 +89,7 @@ function ProductGrid() {
   </span>
 
   <select
-    className="p-2 rounded w-25 border border-blue-300 bg-green-50 text-gray-900"
+    className="p-2 rounded-lg border-2 border-blue-400 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
     value={selectedCategory}
     onChange={(e) => setSelectedCategory(e.target.value)}
   >
@@ -104,7 +104,7 @@ function ProductGrid() {
   {selectedCategory && (
     <button
       onClick={() => setSelectedCategory("")}
-      className="flex items-center gap-1 text-red-600 text-sm font-medium hover:underline ml-auto"
+      className="flex items-center gap-1 text-blue-600 text-sm font-medium hover:text-blue-800 transition ml-auto"
     >
       <ClearIcon sx={{ fontSize: 18 }} />
       Clear

@@ -1,29 +1,35 @@
-import React from "react";
+import { Link } from "react-router-dom";
 import heroImg from "../assets/images/main-slide-01.jpg";
-import {Link} from 'react-router-dom'
+
 function Hero() {
   return (
-    <section className="relative bg-green-50">
-      <div className="relative mx-4 md:mx-6 rounded-lg overflow-hidden">
-        <img
-          src={heroImg}
-          alt="Hero Banner"
-          className="w-full h-[450px] md:h-[550px] object-cover object-center"
-        />
-        <div className="absolute top-1/2 right-6 md:right-12 transform -translate-y-1/2 md:w-1/2 p-4">
-          <p className="uppercase text-sm mb-2 text-white">Fresh & Organic</p>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-            Healthy food, delivered to your door
-          </h1>
-          <p className="mb-4 text-white">
-            Discover our selection of organic products picked from trusted farms.
-          </p>
-          <Link
-            to="/products"
-            className="inline-flex items-center mt-4 px-6 py-3 bg-green-600 hover:bg-green-700 rounded text-white font-medium"
-          >
-            Shop Now
-          </Link>
+    <section className="relative bg-gradient-to-r from-blue-50 to-white py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="grid md:grid-cols-2 gap-8 items-center">
+          <div>
+            <p className="uppercase text-sm font-semibold text-blue-600 mb-3">
+              Welcome to Subhan Arts
+            </p>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+              Premium Clothing Collection
+            </h1>
+            <p className="text-lg text-gray-700 mb-6">
+              Discover our curated selection of high-quality clothing pieces designed for style, comfort, and confidence.
+            </p>
+            <Link
+              to="/products"
+              className="inline-flex items-center px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-semibold transition-colors duration-200"
+            >
+              Explore Collections
+            </Link>
+          </div>
+          <div className="hidden md:block">
+            <img
+              src={heroImg}
+              alt="Subhan Arts Collection"
+              className="w-full h-96 object-cover rounded-lg shadow-lg"
+            />
+          </div>
         </div>
       </div>
     </section>

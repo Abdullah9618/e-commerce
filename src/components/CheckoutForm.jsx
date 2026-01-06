@@ -59,80 +59,94 @@ function Checkout() {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">Checkout</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-96 overflow-y-auto">
+        <div className="p-8">
+          <h2 className="text-3xl font-bold mb-6 text-gray-900">Checkout</h2>
 
-      {itemsToCheckout.length === 0 ? (
-        <p className="text-red-500 font-semibold">Your cart is empty!</p>
-      ) : (
-        <>
-          {/* ORDER SUMMARY */}
-          <div className="bg-gray-100 p-4 rounded mb-4">
-            <h3 className="font-bold mb-2">Order Summary</h3>
-            {itemsToCheckout.map((item) => (
-              <div key={item.id} className="flex justify-between text-sm mb-1">
-                <span>{item.name} (x{item.quantity || 1})</span>
-                <span>Rs {item.price * (item.quantity || 1)}</span>
+          {itemsToCheckout.length === 0 ? (
+            <p className="text-red-500 font-semibold text-center">Your cart is empty!</p>
+          ) : (
+            <>
+              {/* ORDER SUMMARY */}
+              <div className="bg-gradient-to-r from-blue-50 to-white p-6 rounded-lg mb-6 border-2 border-blue-200">
+                <h3 className="font-bold mb-4 text-gray-900 text-lg">Order Summary</h3>
+                {itemsToCheckout.map((item) => (
+                  <div key={item.id} className="flex justify-between text-sm mb-3">
+                    <span className="text-gray-700">{item.name} × {item.quantity || 1}</span>
+                    <span className="font-semibold text-gray-900">Rs {(item.price * (item.quantity || 1)).toLocaleString()}</span>
+                  </div>
+                ))}
+                <hr className="my-4 border-blue-200" />
+                <p className="font-bold text-lg text-blue-600">
+                  Total: Rs{" "}
+                  {itemsToCheckout.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0).toLocaleString()}
+                </p>
               </div>
-            ))}
-            <hr className="my-2" />
-            <p className="font-bold">
-              Total: Rs{" "}
-              {itemsToCheckout.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0)}
-            </p>
-          </div>
 
-          {/* CHECKOUT FORM */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+              {/* CHECKOUT FORM */}
+              <form onSubmit={handleSubmit} className="space-y-5">
 
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              className="w-full p-3 border rounded"
-              value={form.name}
-              onChange={handleChange}
-              required
-            />
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Full Name"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={form.name}
+                  onChange={handleChange}
+                  required
+                />
 
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              className="w-full p-3 border rounded"
-              value={form.email}
-              onChange={handleChange}
-              required
-            />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email Address"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={form.email}
+                  onChange={handleChange}
+                  required
+                />
 
-            <input
-              type="text"
-              name="contact"
-              placeholder="Contact Number"
-              className="w-full p-3 border rounded"
-              value={form.contact}
-              onChange={handleChange}
-              required
-            />
+                <input
+                  type="text"
+                  name="contact"
+                  placeholder="Contact Number"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={form.contact}
+                  onChange={handleChange}
+                  required
+                />
 
-            <textarea
-              name="address"
-              placeholder="Full Address"
-              className="w-full p-3 border rounded"
-              value={form.address}
-              onChange={handleChange}
-              required
-            />
+                <textarea
+                  name="address"
+                  placeholder="Full Address"
+                  rows="3"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={form.address}
+                  onChange={handleChange}
+                  required
+                />
 
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-4 py-2 rounded w-full"
-            >
-              Place Order
-            </button>
-          </form>
-        </>
-      )}
+                <div className="flex gap-4">
+                  <button
+                    type="submit"
+                    className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-semibold"
+                  >
+                    Place Order
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="flex-1 bg-gray-300 text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-400 transition font-semibold"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

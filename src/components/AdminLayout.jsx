@@ -42,9 +42,9 @@ export default function AdminLayout() {
       <CssBaseline />
 
       {/* Top AppBar */}
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, background: "linear-gradient(to right, #2563eb, #1e40af)" }}>
         <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Typography variant="h6" noWrap>Biolife Admin Panel</Typography>
+          <Typography variant="h6" noWrap>Subhan Arts Admin Panel</Typography>
           <AdminHeader />
         </Toolbar>
       </AppBar>
@@ -58,7 +58,7 @@ export default function AdminLayout() {
           [`& .MuiDrawer-paper`]: {
             width: drawerWidth,
             boxSizing: "border-box",
-            backgroundColor: "#111827",
+            backgroundColor: "#0f3460",
             color: "#fff",
           },
         }}
@@ -134,13 +134,13 @@ export default function AdminLayout() {
             mb: 4,
             p: 3,
             borderRadius: 2,
-            background: "linear-gradient(to right, #8e2de2, #4a00e0)",
+            background: "linear-gradient(to right, #2563eb, #1e40af)",
             color: "#fff",
           }}
         >
           <Typography variant="h5" gutterBottom>Welcome Admin!</Typography>
           <Typography>
-            Manage products, categories, orders, and users of your Biolife store.
+            Manage products, categories, orders, and users of your Subhan Arts store.
           </Typography>
         </Box>
 

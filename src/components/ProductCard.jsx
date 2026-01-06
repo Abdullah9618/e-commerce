@@ -1,32 +1,23 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useCart } from "../context/CartContext";
-import { useAuth } from "../context/AuthContext";
-import Login from "../pages/Login";
-import Register from "../pages/Register";
 import { Chip } from "@mui/material";
+import { ShoppingBag } from "@mui/icons-material";
 
 function ProductCard({ product }) {
   const { cartItems, addToCart } = useCart();
-  const { user } = useAuth();
+  const [isAdded, setIsAdded] = useState(false);
 
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-
-  const isAdded = cartItems.some((item) => item.id === product.id);
+  const isInCart = cartItems.some((item) => item.id === product.id);
 
   const handleAddToCart = () => {
-    if (!user) {
-      setIsLoginOpen(true);
-      return;
-    }
-    if (!isAdded) {
-      addToCart(product);
-    }
+    addToCart(product);
+    setIsAdded(true);
+    setTimeout(() => setIsAdded(false), 1500);
   };
 
   return (
-    <div className="relative block overflow-hidden border border-gray-100 bg-white rounded shadow-sm">
-      {/* CATEGORY CHIP OUTSIDE HOVER/IMAGE */}
+    <div className="group relative block overflow-hidden border border-gray-200 bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow">
+      {/* CATEGORY CHIP */}
       {product.category && (
         <Chip
           label={product.category}
@@ -35,64 +26,47 @@ function ProductCard({ product }) {
             position: "absolute",
             top: 12,
             left: 12,
-            backgroundColor: "#e0e7ff",
-            color: "#1e3a8a",
+            backgroundColor: "#1e3a8a",
+            color: "#ffffff",
             fontWeight: 600,
-            borderRadius: "16px",
-            height: "24px",
-            zIndex: 10, // make sure it's above image
+            zIndex: 10,
           }}
         />
       )}
 
-      <div className="overflow-hidden">
+      {/* IMAGE */}
+      <div className="relative h-64 sm:h-72 overflow-hidden bg-gray-100">
         <img
           src={product.image}
           alt={product.name}
-          className="h-64 w-full object-cover transition duration-500 hover:scale-105 sm:h-72"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
       </div>
 
-      <div className="relative p-6">
-        <h3 className="mt-4 text-lg font-medium text-gray-900">{product.name}</h3>
-        <p className="mt-1.5 text-sm text-gray-700">Rs. {product.price}</p>
+      {/* PRODUCT INFO */}
+      <div className="p-5">
+        <h3 className="text-base font-semibold text-gray-900 mb-2 line-clamp-2">
+          {product.name}
+        </h3>
 
+        <p className="text-2xl font-bold text-blue-600 mb-4">
+          Rs. {product.price}
+        </p>
+
+        {/* ADD TO CART BUTTON */}
         <button
           onClick={handleAddToCart}
-          className={`mt-4 block w-full rounded-sm p-4 text-sm font-medium transition hover:scale-105 ${
-            isAdded
-              ? "bg-white text-green-600 border border-green-600 cursor-not-allowed"
-              : "bg-green-600 text-white hover:bg-green-700"
+          className={`w-full py-3 px-4 rounded-lg font-semibold text-sm transition-all flex items-center justify-center gap-2 ${
+            isInCart
+              ? "bg-blue-100 text-blue-700 border border-blue-700 cursor-default"
+              : "bg-blue-600 text-white hover:bg-blue-700 active:scale-95"
           }`}
-          disabled={isAdded}
+          disabled={isInCart}
         >
-          {isAdded ? "Added to Cart" : "Add to Cart"}
+          <ShoppingBag size={18} />
+          {isInCart ? "In Cart" : isAdded ? "Added!" : "Add to Cart"}
         </button>
       </div>
-
-      {isLoginOpen && (
-        <Login
-          isModal={true}
-          closeModal={() => setIsLoginOpen(false)}
-          switchToRegister={() => {
-            setIsLoginOpen(false);
-            setIsRegisterOpen(true);
-          }}
-          redirectAfterLogin={null}
-        />
-      )}
-
-      {isRegisterOpen && (
-        <Register
-          isModal={true}
-          closeModal={() => setIsRegisterOpen(false)}
-          switchToLogin={() => {
-            setIsRegisterOpen(false);
-            setIsLoginOpen(true);
-          }}
-          redirectAfterRegister={null}
-        />
-      )}
     </div>
   );
 }

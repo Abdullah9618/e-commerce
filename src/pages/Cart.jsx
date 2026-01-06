@@ -18,36 +18,37 @@ function Cart() {
   };
 
   return (
-    <div className="bg-green-50 min-h-screen py-12">
+    <div className="bg-gradient-to-b from-white to-gray-50 min-h-screen py-12">
       <div className="max-w-7xl mx-auto px-4">
-        <h1 className="text-3xl font-bold mb-8 text-gray-900 text-center">Your Cart</h1>
+        <h1 className="text-4xl font-bold mb-8 text-gray-900 text-center">Your Shopping Cart</h1>
         {cartItems.length === 0 ? (
-          <p className="text-center text-gray-700">Your cart is empty.</p>
+          <p className="text-center text-gray-700 text-lg">Your cart is empty.</p>
         ) : (
           <>
             <ul className="space-y-4">
               {cartItems.map(item => (
-                <li key={item.id} className="flex items-center justify-between gap-4 bg-white p-4 rounded shadow-sm">
+                <li key={item.id} className="flex items-center justify-between gap-4 bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
                   <div className="flex items-center gap-4">
-                    <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded" />
+                    <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded-lg" />
                     <div>
-                      <h3 className="text-gray-900 font-medium">{item.name}</h3>
+                      <h3 className="text-gray-900 font-semibold text-lg">{item.name}</h3>
+                      <p className="text-blue-600 font-medium">Rs {item.price}</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-4">
                     {/* Quantity buttons */}
-                    <div className="flex items-center border rounded">
+                    <div className="flex items-center border-2 border-blue-300 rounded-lg">
                       <button
                         onClick={() => handleDecrease(item)}
-                        className="px-3 py-1 bg-gray-200 hover:bg-gray-300"
+                        className="px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold"
                       >
-                        -
+                        −
                       </button>
-                      <span className="px-3">{item.quantity}</span>
+                      <span className="px-4 py-2 text-gray-900 font-medium">{item.quantity}</span>
                       <button
                         onClick={() => handleIncrease(item)}
-                        className="px-3 py-1 bg-gray-200 hover:bg-gray-300"
+                        className="px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold"
                       >
                         +
                       </button>
@@ -56,27 +57,27 @@ function Cart() {
                     {/* Delete button */}
                     <button
                       onClick={() => removeFromCart(item.id)}
-                      className="text-red-500 hover:text-red-700 ml-2"
+                      className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded transition"
                     >
-                      <FiTrash2 size={20} />
+                      <FiTrash2 size={22} />
                     </button>
                   </div>
 
                   {/* Price */}
-                  <div className="ml-4 font-medium text-gray-900">Rs {item.price * item.quantity}</div>
+                  <div className="ml-4 font-bold text-gray-900 text-lg min-w-max">Rs {(item.price * item.quantity).toLocaleString()}</div>
                 </li>
               ))}
             </ul>
 
             <div className="mt-8 flex justify-end">
-              <div className="w-full max-w-md bg-white p-6 rounded shadow-md space-y-4">
-                <div className="flex justify-between font-bold text-gray-900 text-lg">
-                  <span>Total</span>
-                  <span>Rs {total}</span>
+              <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg border-2 border-blue-200 space-y-4">
+                <div className="flex justify-between font-bold text-gray-900 text-xl border-b-2 border-blue-200 pb-4">
+                  <span>Total Amount:</span>
+                  <span className="text-blue-600">Rs {total.toLocaleString()}</span>
                 </div>
                 <button
                   onClick={() => setIsCheckoutOpen(true)}
-                  className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
+                  className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold text-lg"
                 >
                   Proceed to Checkout
                 </button>

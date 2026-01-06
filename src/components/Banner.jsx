@@ -1,29 +1,36 @@
-import lemonImg from "../assets/images/p-07.jpg";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
+import bannerImg from "../assets/images/2.png";
+
 function Banner() {
   return (
-    <section className="py-16">
+    <section className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex flex-col md:flex-row items-center bg-gradient-to-r from-green-400 to-green-600 rounded-2xl overflow-hidden shadow-xl">
+        <div className="flex flex-col md:flex-row items-center bg-gradient-to-r from-blue-500 to-blue-700 rounded-2xl overflow-hidden shadow-xl">
           <div className="md:w-1/2 relative">
-            <img src={lemonImg} alt="Lemon Product" className="w-full h-72 md:h-full object-cover" />
-            <div className="absolute top-4 left-4 bg-gradient-to-r from-yellow-600 to-yellow-700 text-white font-extrabold px-4 py-2 rounded-lg text-lg">
-              50% OFF!
+            <img
+              src={bannerImg}
+              alt="Subhan Arts Featured Collection"
+              className="w-full h-72 md:h-80 object-cover"
+            />
+            <div className="absolute top-4 left-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-extrabold px-4 py-2 rounded-lg text-lg shadow-lg">
+              New Arrivals
             </div>
           </div>
           <div className="md:w-1/2 p-8 flex flex-col justify-center space-y-4 text-white">
-            <h2 className="text-3xl md:text-5xl font-extrabold drop-shadow-lg">Juicy Fresh Organic Lemons</h2>
+            <h2 className="text-3xl md:text-5xl font-extrabold drop-shadow-lg">
+              Elevate Your Style
+            </h2>
             <p className="text-lg md:text-xl drop-shadow-md">
-              Grab your fresh lemons at half price! Perfect for juices, desserts, and healthy snacks.
+              Discover the latest collection of premium quality clothing designed for the modern individual.
             </p>
             <p className="text-base md:text-lg drop-shadow-md">
-              Limited time offer! Don’t miss out on this fresh and zesty deal.
+              Shop now and experience comfort, style, and elegance in every piece.
             </p>
             <Link
               to="/products"
-              className="inline-block mt-4 px-8 py-3 bg-yellow-400 text-green-900 font-bold rounded-lg shadow-lg hover:bg-yellow-500 transition-all"
+              className="inline-block mt-4 px-8 py-3 bg-yellow-400 text-blue-900 font-bold rounded-lg shadow-lg hover:bg-yellow-300 transition-all"
             >
-              Shop Now
+              Explore Collection
             </Link>
           </div>
         </div>
