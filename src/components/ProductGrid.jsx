@@ -72,6 +72,27 @@ function ProductGrid() {
       : products.filter((p) => p.category === selectedCategory);
 
   if (loading) return <Loading message="Loading products..." />;
+  // Prepare a temporary fallback of 8 local demo products when no products are fetched.
+  const demoImages = Array.from({ length: 8 }).map((_, i) =>
+    new URL(`../assets/images/${i + 1}.png`, import.meta.url).href
+  );
+
+  const demoProducts = demoImages.map((src, i) => ({
+    id: `demo-${i + 1}`,
+    name: `Demo Product ${i + 1}`,
+    price: (i + 1) * 100,
+    image: src,
+    category: "Demo",
+  }));
+
+  // If you want to force showing only local demo cards, set USE_LOCAL_DEMO = true
+  const USE_LOCAL_DEMO = true;
+
+  const displayProducts = USE_LOCAL_DEMO
+    ? demoProducts
+    : filteredProducts.length > 0
+    ? filteredProducts
+    : demoProducts;
 
   return (
     <div className="max-w-7xl mx-auto p-4">
@@ -119,14 +140,12 @@ function ProductGrid() {
         <p className="text-red-500 mb-4 text-center">{error}</p>
       )}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => (
+        {displayProducts.length > 0 ? (
+          displayProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))
         ) : (
-          <p className="text-gray-500 col-span-full text-center">
-            No products found.
-          </p>
+          <p className="text-gray-500 col-span-full text-center">No products found.</p>
         )}
       </div>
     </div>

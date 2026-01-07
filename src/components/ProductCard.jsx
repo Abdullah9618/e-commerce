@@ -15,6 +15,8 @@ function ProductCard({ product }) {
     setTimeout(() => setIsAdded(false), 1500);
   };
 
+  
+
   return (
     <div className="group relative block overflow-hidden border border-gray-200 bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow">
       {/* CATEGORY CHIP */}
