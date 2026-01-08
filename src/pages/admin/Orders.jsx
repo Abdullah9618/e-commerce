@@ -20,17 +20,19 @@ const borderColor = "#e0e0e0";
 
 function Orders() {
     // Remove order from Firestore and UI
-    const removeOrder = async (orderId) => {
-      if (!window.confirm("Are you sure you want to delete this order?")) return;
-      try {
-        await deleteDoc(doc(db, "orders", orderId));
-        setOrders(prev => prev.filter(o => o.id !== orderId));
-        const pending = orders.filter(o => o.id !== orderId && o.status !== "completed").length;
-        setPendingCount(pending);
-      } catch (err) {
-        alert("Failed to delete order. Please try again.");
-      }
-    };
+  const removeOrder = async (orderId) => {
+    if (!window.confirm("Are you sure you want to delete this order?")) return;
+    try {
+      await deleteDoc(doc(db, "orders", orderId));
+      setOrders(prev => {
+        const updated = prev.filter(o => o.id !== orderId);
+        setPendingCount(updated.filter(o => o.status !== "completed").length);
+        return updated;
+      });
+    } catch (err) {
+      alert("Failed to delete order. Please try again.");
+    }
+  };
   const [orders, setOrders] = useState([]);
   const [pendingCount, setPendingCount] = useState(0);
 
@@ -87,9 +89,43 @@ function Orders() {
                 position="relative"
                 sx={{ fontSize: { xs: 14, sm: 16 } }}
               >
+
                 <Typography variant="h6" mb={1} fontWeight={600} color={headerColor} sx={{ fontSize: { xs: 16, sm: 20 } }}>
                   Order ID: {order.id}
                 </Typography>
+
+                {/* ACTION BUTTONS: Responsive, below Order ID */}
+                <Stack
+                  direction={{ xs: "column", sm: "row" }}
+                  spacing={1}
+                  mb={2}
+                  alignItems={{ xs: "flex-start", sm: "center" }}
+                >
+                  {order.status !== "completed" ? (
+                    <Button
+                      variant="contained"
+                      color="error"
+                      size="small"
+                      onClick={() => markCompleted(order.id)}
+                    >
+                      Mark as Completed
+                    </Button>
+                  ) : (
+                    <Chip
+                      label="Completed"
+                      size="small"
+                      color="success"
+                    />
+                  )}
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    size="small"
+                    onClick={() => removeOrder(order.id)}
+                  >
+                    Remove
+                  </Button>
+                </Stack>
 
                 <Box mb={2}>
                   <Typography variant="subtitle1" fontWeight={600} sx={{ fontSize: { xs: 15, sm: 17 } }}>User Info:</Typography>
@@ -164,33 +200,6 @@ function Orders() {
                     : "N/A"}
                 </Typography>
 
-                {/* MARK COMPLETED BUTTON */}
-                <Stack direction="row" spacing={1} sx={{ position: "absolute", top: 16, right: 16 }}>
-                  {order.status !== "completed" ? (
-                    <Button
-                      variant="contained"
-                      color="error"
-                      size="small"
-                      onClick={() => markCompleted(order.id)}
-                    >
-                      Mark as Completed
-                    </Button>
-                  ) : (
-                    <Chip
-                      label="Completed"
-                      size="small"
-                      color="success"
-                    />
-                  )}
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    size="small"
-                    onClick={() => removeOrder(order.id)}
-                  >
-                    Remove
-                  </Button>
-                </Stack>
               </Box>
             </Paper>
           ))}
