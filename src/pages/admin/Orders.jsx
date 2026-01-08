@@ -66,9 +66,9 @@ function Orders() {
   };
 
   return (
-      <Box p={{ xs: 1, sm: 2, md: 3 }} fontFamily="Roboto">
-      <Stack direction="row" alignItems="center" spacing={2} mb={3}>
-        <Typography variant="h4" fontWeight={700} color={headerColor}>
+    <Box p={{ xs: 0.5, sm: 2, md: 3 }} fontFamily="Roboto">
+      <Stack direction={{ xs: "column", sm: "row" }} alignItems={{ xs: "flex-start", sm: "center" }} spacing={2} mb={3}>
+        <Typography variant="h5" fontWeight={700} color={headerColor} sx={{ fontSize: { xs: 22, sm: 28 } }}>
           Orders
         </Typography>
         <Chip label={`${pendingCount} Pending`} color="error" />
@@ -81,77 +81,78 @@ function Orders() {
           {orders.map(order => (
             <Paper key={order.id} elevation={3}>
               <Box
-                p={3}
+                p={{ xs: 1, sm: 3 }}
                 borderRadius={2}
                 bgcolor={order.status === "completed" ? "#d1fae5" : "#ffffff"}
                 position="relative"
+                sx={{ fontSize: { xs: 14, sm: 16 } }}
               >
-                <Typography variant="h6" mb={1} fontWeight={600} color={headerColor}>
+                <Typography variant="h6" mb={1} fontWeight={600} color={headerColor} sx={{ fontSize: { xs: 16, sm: 20 } }}>
                   Order ID: {order.id}
                 </Typography>
 
                 <Box mb={2}>
-                  <Typography variant="subtitle1" fontWeight={600}>User Info:</Typography>
+                  <Typography variant="subtitle1" fontWeight={600} sx={{ fontSize: { xs: 15, sm: 17 } }}>User Info:</Typography>
                   <Typography>Name: {order.userInfo?.name}</Typography>
-
                   <Typography>Contact: {order.userInfo?.contact}</Typography>
                   <Typography>Address: {order.userInfo?.address}</Typography>
                 </Box>
 
                 <Box mb={2}>
-                  <Typography variant="subtitle1" fontWeight={600}>Products:</Typography>
+                  <Typography variant="subtitle1" fontWeight={600} sx={{ fontSize: { xs: 15, sm: 17 } }}>Products:</Typography>
 
                   {order.products && order.products.length > 0 ? (
-                      <Table size="small" sx={{ minWidth: 600 }}>
-                      <TableHead sx={{ backgroundColor: "#f3f4f6" }}>
-                        <TableRow>
-                          <TableCell sx={{ fontWeight: 600, borderColor }}>Product</TableCell>
-                          <TableCell sx={{ fontWeight: 600, borderColor }}>Qty × Price</TableCell>
-                        </TableRow>
-                      </TableHead>
-
-                      <TableBody>
-                        {order.products.map((prod, idx) => (
-                          <TableRow key={idx} sx={{ "&:hover": { backgroundColor: "#f9fafb" } }}>
-                            <TableCell
-                              sx={{
-                                borderColor,
-                                display: "flex",
-                                gap: 1,
-                                alignItems: "center",
-                              }}
-                            >
-                              {prod.name}
-
-                              {/* Rounded category chip */}
-                              {prod.category && (
-                                <Chip
-                                  label={prod.category}
-                                  size="small"
-                                  sx={{
-                                    backgroundColor: "#e0e7ff",
-                                    color: "#1e3a8a",
-                                    fontWeight: 600,
-                                    borderRadius: "16px",
-                                    height: "22px",
-                                  }}
-                                />
-                              )}
-                            </TableCell>
-
-                            <TableCell sx={{ borderColor }}>
-                              {prod.quantity} × Rs {prod.price}
-                            </TableCell>
+                    <Box sx={{ width: "100%", overflowX: "auto" }}>
+                      <Table size="small" sx={{ minWidth: { xs: 350, sm: 500, md: 600 } }}>
+                        <TableHead sx={{ backgroundColor: "#f3f4f6" }}>
+                          <TableRow>
+                            <TableCell sx={{ fontWeight: 600, borderColor, fontSize: { xs: 13, sm: 15 } }}>Product</TableCell>
+                            <TableCell sx={{ fontWeight: 600, borderColor, fontSize: { xs: 13, sm: 15 } }}>Qty × Price</TableCell>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                        </TableHead>
+
+                        <TableBody>
+                          {order.products.map((prod, idx) => (
+                            <TableRow key={idx} sx={{ "&:hover": { backgroundColor: "#f9fafb" } }}>
+                              <TableCell
+                                sx={{
+                                  borderColor,
+                                  display: "flex",
+                                  gap: 1,
+                                  alignItems: "center",
+                                  fontSize: { xs: 13, sm: 15 },
+                                }}
+                              >
+                                {prod.name}
+                                {/* Rounded category chip */}
+                                {prod.category && (
+                                  <Chip
+                                    label={prod.category}
+                                    size="small"
+                                    sx={{
+                                      backgroundColor: "#e0e7ff",
+                                      color: "#1e3a8a",
+                                      fontWeight: 600,
+                                      borderRadius: "16px",
+                                      height: "22px",
+                                    }}
+                                  />
+                                )}
+                              </TableCell>
+                              <TableCell sx={{ borderColor, fontSize: { xs: 13, sm: 15 } }}>
+                                {prod.quantity} × Rs {prod.price}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </Box>
                   ) : (
                     <Typography>No products found.</Typography>
                   )}
                 </Box>
 
-                <Stack direction="row" justifyContent="space-between" fontWeight="bold" mb={1}>
+                <Stack direction="row" justifyContent="space-between" fontWeight="bold" mb={1} sx={{ fontSize: { xs: 14, sm: 16 } }}>
                   <Typography>Total:</Typography>
                   <Typography>Rs {order.total}</Typography>
                 </Stack>
