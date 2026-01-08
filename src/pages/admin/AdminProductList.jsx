@@ -54,7 +54,7 @@ function AdminProductList() {
   };
 
   return (
-    <Box fontFamily="Roboto" p={3}>
+    <Box fontFamily="Roboto" p={{ xs: 1, sm: 2, md: 3 }}>
       <Typography variant="h4" fontWeight={700} mb={3} color={headerColor}>
         Manage Products
       </Typography>
@@ -69,8 +69,8 @@ function AdminProductList() {
         + Add New Product
       </Button>
 
-      <Paper>
-        <Table>
+      <Paper sx={{ width: "100%", overflowX: "auto", mt: 2 }}>
+        <Table sx={{ minWidth: 600 }}>
           <TableHead sx={{ backgroundColor: "#f3f4f6" }}>
             <TableRow>
               <TableCell sx={{ fontWeight: 600 }}>Image</TableCell>

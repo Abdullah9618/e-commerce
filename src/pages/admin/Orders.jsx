@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../services/firebase";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, deleteDoc, doc } from "firebase/firestore";
 import {
   Box,
   Typography,
@@ -19,6 +19,18 @@ const headerColor = "#1e40af";
 const borderColor = "#e0e0e0";
 
 function Orders() {
+    // Remove order from Firestore and UI
+    const removeOrder = async (orderId) => {
+      if (!window.confirm("Are you sure you want to delete this order?")) return;
+      try {
+        await deleteDoc(doc(db, "orders", orderId));
+        setOrders(prev => prev.filter(o => o.id !== orderId));
+        const pending = orders.filter(o => o.id !== orderId && o.status !== "completed").length;
+        setPendingCount(pending);
+      } catch (err) {
+        alert("Failed to delete order. Please try again.");
+      }
+    };
   const [orders, setOrders] = useState([]);
   const [pendingCount, setPendingCount] = useState(0);
 
@@ -54,7 +66,7 @@ function Orders() {
   };
 
   return (
-    <Box p={3} fontFamily="Roboto">
+      <Box p={{ xs: 1, sm: 2, md: 3 }} fontFamily="Roboto">
       <Stack direction="row" alignItems="center" spacing={2} mb={3}>
         <Typography variant="h4" fontWeight={700} color={headerColor}>
           Orders
@@ -90,7 +102,7 @@ function Orders() {
                   <Typography variant="subtitle1" fontWeight={600}>Products:</Typography>
 
                   {order.products && order.products.length > 0 ? (
-                    <Table size="small">
+                      <Table size="small" sx={{ minWidth: 600 }}>
                       <TableHead sx={{ backgroundColor: "#f3f4f6" }}>
                         <TableRow>
                           <TableCell sx={{ fontWeight: 600, borderColor }}>Product</TableCell>
@@ -152,24 +164,32 @@ function Orders() {
                 </Typography>
 
                 {/* MARK COMPLETED BUTTON */}
-                {order.status !== "completed" ? (
+                <Stack direction="row" spacing={1} sx={{ position: "absolute", top: 16, right: 16 }}>
+                  {order.status !== "completed" ? (
+                    <Button
+                      variant="contained"
+                      color="error"
+                      size="small"
+                      onClick={() => markCompleted(order.id)}
+                    >
+                      Mark as Completed
+                    </Button>
+                  ) : (
+                    <Chip
+                      label="Completed"
+                      size="small"
+                      color="success"
+                    />
+                  )}
                   <Button
-                    variant="contained"
+                    variant="outlined"
                     color="error"
                     size="small"
-                    sx={{ position: "absolute", top: 16, right: 16 }}
-                    onClick={() => markCompleted(order.id)}
+                    onClick={() => removeOrder(order.id)}
                   >
-                    Mark as Completed
+                    Remove
                   </Button>
-                ) : (
-                  <Chip
-                    label="Completed"
-                    size="small"
-                    color="success"
-                    sx={{ position: "absolute", top: 16, right: 16 }}
-                  />
-                )}
+                </Stack>
               </Box>
             </Paper>
           ))}
