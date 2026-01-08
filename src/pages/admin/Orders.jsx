@@ -81,7 +81,7 @@ function Orders() {
                 <Box mb={2}>
                   <Typography variant="subtitle1" fontWeight={600}>User Info:</Typography>
                   <Typography>Name: {order.userInfo?.name}</Typography>
-                  <Typography>Email: {order.userInfo?.email}</Typography>
+
                   <Typography>Contact: {order.userInfo?.contact}</Typography>
                   <Typography>Address: {order.userInfo?.address}</Typography>
                 </Box>

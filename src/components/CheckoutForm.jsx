@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { db } from "../services/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../context/useCart";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function Checkout() {
@@ -17,7 +17,6 @@ function Checkout() {
 
   const [form, setForm] = useState({
     name: "",
-    email: "",
     contact: "",
     address: ""
   });
@@ -46,7 +45,7 @@ function Checkout() {
       alert("Order placed successfully!");
 
       // Clear form + cart
-      setForm({ name: "", email: "", contact: "", address: "" });
+      setForm({ name: "", contact: "", address: "" });
       clearCart();
 
       // Redirect to home after order
@@ -60,85 +59,84 @@ function Checkout() {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-96 overflow-y-auto">
-        <div className="p-8">
-          <h2 className="text-3xl font-bold mb-6 text-gray-900">Checkout</h2>
+      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border-4 border-blue-100">
+        <div className="p-4 sm:p-8">
+          <h2 className="text-2xl sm:text-4xl font-extrabold mb-6 sm:mb-8 text-blue-700 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-blue-500"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75A2.25 2.25 0 014.5 4.5h15a2.25 2.25 0 012.25 2.25v12a2.25 2.25 0 01-2.25 2.25h-15A2.25 2.25 0 012.25 18.75v-12z" /><path strokeLinecap="round" strokeLinejoin="round" d="M6.75 9.75h10.5m-10.5 3h10.5m-10.5 3h6.75" /></svg>
+            Checkout
+          </h2>
 
           {itemsToCheckout.length === 0 ? (
             <p className="text-red-500 font-semibold text-center">Your cart is empty!</p>
           ) : (
             <>
               {/* ORDER SUMMARY */}
-              <div className="bg-gradient-to-r from-blue-50 to-white p-6 rounded-lg mb-6 border-2 border-blue-200">
-                <h3 className="font-bold mb-4 text-gray-900 text-lg">Order Summary</h3>
+              <div className="bg-gradient-to-r from-blue-50 to-white p-4 sm:p-6 rounded-lg mb-6 sm:mb-8 border-2 border-blue-200 shadow-sm">
+                <h3 className="font-bold mb-3 sm:mb-4 text-gray-900 text-base sm:text-lg flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-blue-400"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" /></svg>
+                  Order Summary
+                </h3>
                 {itemsToCheckout.map((item) => (
-                  <div key={item.id} className="flex justify-between text-sm mb-3">
-                    <span className="text-gray-700">{item.name} × {item.quantity || 1}</span>
-                    <span className="font-semibold text-gray-900">Rs {(item.price * (item.quantity || 1)).toLocaleString()}</span>
+                  <div key={item.id} className="flex flex-col sm:flex-row justify-between text-sm sm:text-base mb-2 sm:mb-3">
+                    <span className="text-gray-700 font-medium">{item.name} × {item.quantity || 1}</span>
+                    <span className="font-semibold text-blue-700">Rs {(item.price * (item.quantity || 1)).toLocaleString()}</span>
                   </div>
                 ))}
                 <hr className="my-4 border-blue-200" />
-                <p className="font-bold text-lg text-blue-600">
-                  Total: Rs{" "}
-                  {itemsToCheckout.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0).toLocaleString()}
+                <p className="font-bold text-lg sm:text-xl text-blue-700 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-green-500"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 1" /></svg>
+                  Total: Rs {itemsToCheckout.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0).toLocaleString()}
                 </p>
               </div>
 
               {/* CHECKOUT FORM */}
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                <div className="flex flex-col gap-4 sm:flex-row">
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Full Name"
+                    className="flex-1 p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm text-sm sm:text-base"
+                    value={form.name}
+                    onChange={handleChange}
+                    required
+                  />
 
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Full Name"
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  value={form.name}
-                  onChange={handleChange}
-                  required
-                />
-
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email Address"
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  value={form.email}
-                  onChange={handleChange}
-                  required
-                />
-
-                <input
-                  type="text"
-                  name="contact"
-                  placeholder="Contact Number"
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  value={form.contact}
-                  onChange={handleChange}
-                  required
-                />
-
-                <textarea
-                  name="address"
-                  placeholder="Full Address"
-                  rows="3"
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  value={form.address}
-                  onChange={handleChange}
-                  required
-                />
-
-                <div className="flex gap-4">
+                </div>
+                <div className="flex flex-col gap-4 sm:flex-row">
+                  <input
+                    type="text"
+                    name="contact"
+                    placeholder="Contact Number"
+                    className="flex-1 p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm text-sm sm:text-base"
+                    value={form.contact}
+                    onChange={handleChange}
+                    required
+                  />
+                  <textarea
+                    name="address"
+                    placeholder="Full Address"
+                    rows="3"
+                    className="flex-1 p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm resize-none text-sm sm:text-base"
+                    value={form.address}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4 mt-4 sm:mt-6">
                   <button
                     type="submit"
-                    className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-semibold"
+                    className="w-full sm:flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-semibold flex items-center justify-center gap-2 shadow-md text-base"
                   >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-white"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
                     Place Order
                   </button>
                   <button
                     type="button"
-                    onClick={onClose}
-                    className="flex-1 bg-gray-300 text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-400 transition font-semibold"
+                    onClick={() => navigate(-1)}
+                    className="w-full sm:flex-1 bg-gray-200 text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-300 transition font-semibold flex items-center justify-center gap-2 shadow-md text-base"
                   >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-700"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                     Cancel
                   </button>
                 </div>

@@ -93,15 +93,7 @@ export default function AdminLayout() {
               <ListItemText primary="Categories" />
             </ListItemButton>
 
-            {/* Users */}
-            <ListItemButton component={Link} to="/admin/users">
-              <ListItemIcon sx={{ color: "#fff" }}>
-                <Badge badgeContent={userCount} color="success">
-                  <People sx={{ color: "#fff" }} />
-                </Badge>
-              </ListItemIcon>
-              <ListItemText primary="Users" />
-            </ListItemButton>
+            {/* Users removed */}
 
             {/* Orders */}
             <ListItemButton component={Link} to="/admin/orders">
@@ -140,7 +132,7 @@ export default function AdminLayout() {
         >
           <Typography variant="h5" gutterBottom>Welcome Admin!</Typography>
           <Typography>
-            Manage products, categories, orders, and users of your Subhan Arts store.
+            Manage products, categories, and orders of your Subhan Arts store.
           </Typography>
         </Box>
 

@@ -43,17 +43,17 @@ function AddProduct() {
     try {
       let finalImageURL = imageURL;
 
-      // Upload local image to imgbb
+      // Upload local image to Cloudinary (dituzup)
       if (localFile) {
         const formData = new FormData();
-        formData.append("image", localFile);
+        formData.append("file", localFile);
+        formData.append("upload_preset", "product"); // Replace with your Cloudinary preset
 
         const res = await axios.post(
-          `https://api.imgbb.com/1/upload?key=${imgbbApiKey}`,
+          "https://api.cloudinary.com/v1_1/dituzup04/image/upload",
           formData
         );
-
-        finalImageURL = res.data.data.url;
+        finalImageURL = res.data.secure_url;
       }
 
       // Add product to Firestore

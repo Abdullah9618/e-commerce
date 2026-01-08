@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ShoppingCart, Search } from "lucide-react";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../context/useCart";
 
 function Navbar() {
   const { cartItems } = useCart();
@@ -44,12 +44,12 @@ function Navbar() {
 
         {/* Bottom row: Navigation links */}
         <div className="flex items-center h-12 gap-8 text-gray-700 font-medium">
-          <Link to="/" className="hover:text-blue-600 transition">
+          <a href="#top" className="hover:text-blue-600 transition">
             Home
-          </Link>
-          <Link to="/products" className="hover:text-blue-600 transition">
+          </a>
+          <a href="#products" className="hover:text-blue-600 transition">
             Collections
-          </Link>
+          </a>
           <a href="#contact" className="hover:text-blue-600 transition">
             Contact
           </a>

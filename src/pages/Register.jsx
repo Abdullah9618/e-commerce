@@ -72,3 +72,4 @@ function Register({ isModal = false, closeModal, switchToLogin }) {
 }
 
 export default Register;
+  // Deleted: No longer used

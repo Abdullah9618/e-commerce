@@ -1,18 +1,25 @@
 import { useState } from "react";
-import { useCart } from "../context/CartContext";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/useCart";
 import { Chip } from "@mui/material";
 import { ShoppingBag } from "@mui/icons-material";
 
 function ProductCard({ product }) {
   const { cartItems, addToCart } = useCart();
   const [isAdded, setIsAdded] = useState(false);
+  const [showCartPopup, setShowCartPopup] = useState(false);
+  const navigate = useNavigate();
 
   const isInCart = cartItems.some((item) => item.id === product.id);
 
   const handleAddToCart = () => {
     addToCart(product);
     setIsAdded(true);
-    setTimeout(() => setIsAdded(false), 1500);
+    setShowCartPopup(true);
+    setTimeout(() => {
+      setIsAdded(false);
+      setShowCartPopup(false);
+    }, 1500);
   };
 
   
@@ -68,6 +75,27 @@ function ProductCard({ product }) {
           <ShoppingBag size={18} />
           {isInCart ? "In Cart" : isAdded ? "Added!" : "Add to Cart"}
         </button>
+
+        {/* Cart Popup Modal */}
+        {showCartPopup && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl shadow-2xl p-6 max-w-xs w-full flex flex-col items-center gap-4 border-2 border-blue-200">
+              <div className="text-2xl text-blue-700 font-bold">Added to Cart!</div>
+              <button
+                onClick={() => navigate('/cart')}
+                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition font-semibold"
+              >
+                Go to Cart
+              </button>
+              <button
+                onClick={() => setShowCartPopup(false)}
+                className="w-full bg-gray-200 text-gray-900 py-2 rounded-lg hover:bg-gray-300 transition font-semibold"
+              >
+                Continue Shopping
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

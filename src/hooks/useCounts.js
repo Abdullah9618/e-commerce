@@ -13,8 +13,7 @@ export function useCounts() {
         const prodSnap = await getDocs(collection(db, "products"));
         setProductCount(prodSnap.size);
 
-        const userSnap = await getDocs(collection(db, "users"));
-        setUserCount(userSnap.size);
+        // Removed user count logic
 
         const orderSnap = await getDocs(collection(db, "orders"));
         setOrderCount(orderSnap.size);
@@ -25,5 +24,5 @@ export function useCounts() {
     fetchCounts();
   }, []);
 
-  return { productCount, userCount, orderCount };
+  return { productCount, orderCount };
 }

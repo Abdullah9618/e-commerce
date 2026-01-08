@@ -1,14 +1,22 @@
 // src/context/CartContext.jsx
-import React, { createContext, useContext, useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
 import { db } from "../services/firebase";
 import { collection, addDoc } from "firebase/firestore";
 
-const CartContext = createContext();
-
-export const useCart = () => useContext(CartContext);
+import { CartContext } from "./CartProvider";
 
 export const CartProvider = ({ children }) => {
-  const initialState = { cartItems: [] };
+  // Load cart from localStorage if present
+  const getInitialCart = () => {
+    try {
+      const stored = localStorage.getItem("cartItems");
+      if (stored) return { cartItems: JSON.parse(stored) };
+    } catch {
+      // Ignore JSON parse/localStorage errors
+    }
+    return { cartItems: [] };
+  };
+  const initialState = getInitialCart();
 
   function cartReducer(state, action) {
     switch (action.type) {
@@ -46,6 +54,11 @@ export const CartProvider = ({ children }) => {
 
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
+  // Persist cart to localStorage
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+  }, [state.cartItems]);
+
   const addToCart = (product) => dispatch({ type: "ADD", payload: product });
   const removeFromCart = (id) => dispatch({ type: "REMOVE", payload: id });
   const updateQuantity = (id, quantity) => dispatch({ type: "UPDATE_QTY", payload: { id, quantity } });
@@ -61,7 +74,8 @@ export const CartProvider = ({ children }) => {
         total: getSubtotal(),
         createdAt: new Date(),
       });
-      clearCart();
+      // Mark items as ordered, but keep them in cart
+      dispatch({ type: "SET", payload: state.cartItems.map(item => ({ ...item, ordered: true })) });
       alert("Order placed successfully!");
     } catch (err) {
       console.error("Error placing order:", err);

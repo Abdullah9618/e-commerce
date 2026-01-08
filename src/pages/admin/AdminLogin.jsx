@@ -60,4 +60,4 @@ function AdminLogin() {
   );
 }
 
-export default AdminLogin;
+// AdminLogin component removed: no login required for admin panel

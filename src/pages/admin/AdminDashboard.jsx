@@ -51,8 +51,7 @@ export default function AdminDashboard() {
         const prodSnap = await getDocs(collection(db, "products"));
         setProductCount(prodSnap.size);
 
-        const userSnap = await getDocs(collection(db, "users"));
-        setUserCount(userSnap.size);
+        // Removed user count logic
 
         const orderSnap = await getDocs(collection(db, "orders"));
         setOrderCount(orderSnap.size);
@@ -73,7 +72,7 @@ export default function AdminDashboard() {
             {location.city && <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}><LocationOn /><Typography variant="body2">{location.city}, {location.country}</Typography></Box>}
             {weather && <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}><Thermostat /><Typography variant="body2">{Math.round(weather.main.temp)}°C, {weather.weather[0].main}</Typography></Box>}
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}><AccessTime /><Typography variant="body2">{time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</Typography></Box>
-            <Button component={Link} to="/admin-login" variant="contained" color="error" size="small">Logout</Button>
+            {/* Logout button removed */}
           </Box>
         </Toolbar>
       </AppBar>
@@ -101,12 +100,7 @@ export default function AdminDashboard() {
               <ListItemText primary="Products" />
             </ListItem>
 
-            <ListItem button component={Link} to="/admin/users">
-              <ListItemIcon sx={{ color: "#fff" }}>
-                <Badge badgeContent={userCount} color="success"><People sx={{ color: "#fff" }} /></Badge>
-              </ListItemIcon>
-              <ListItemText primary="Users" />
-            </ListItem>
+            {/* Users link removed */}
 
             <ListItem button component={Link} to="/admin/orders">
               <ListItemIcon sx={{ color: "#fff" }}>
@@ -122,7 +116,7 @@ export default function AdminDashboard() {
         <Toolbar />
         <Box sx={{ mb: 4, p: 3, borderRadius: 2, background: "linear-gradient(to right, #8e2de2, #4a00e0)", color: "#fff" }}>
           <Typography variant="h5" gutterBottom>Welcome Admin!</Typography>
-          <Typography>Manage products, orders, and users of your Biolife store.</Typography>
+          <Typography>Manage products and orders of your Biolife store.</Typography>
         </Box>
       </Box>
     </Box>

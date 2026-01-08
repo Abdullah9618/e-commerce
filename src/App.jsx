@@ -14,8 +14,8 @@ import Cart from "./pages/Cart";
 import OrderSuccess from "./pages/OrderSuccess";
 
 // Admin pages
-import AdminLogin from "./pages/admin/AdminLogin";
-import Users from "./pages/admin/Users";
+// import AdminLogin from "./pages/admin/AdminLogin";
+// import Users from "./pages/admin/Users";
 import Orders from "./pages/admin/Orders";
 import AddProduct from "./pages/admin/AddProduct";
 import AdminProductList from "./pages/admin/AdminProductList";
@@ -35,12 +35,7 @@ const Layout = ({ children }) => {
   return <>{children}</>;
 };
 
-// Admin protected route (uses localStorage for simplicity; consider custom claims for production)
-const ProtectedAdmin = ({ children }) => {
-  const isAdmin = localStorage.getItem("adminLoggedIn") === "true";
-  if (!isAdmin) return <Navigate to="/admin-login" />;
-  return children;
-};
+// Admin protection removed: all users can access admin panel
 
 function App() {
   return (
@@ -55,16 +50,12 @@ function App() {
             <Route path="/order-success" element={<OrderSuccess />} />
 
             {/* Admin Routes */}
-            <Route path="/admin-login" element={<AdminLogin />} />
+            {/* <Route path="/admin-login" element={<AdminLogin />} /> */}
 
             {/* Admin Layout with nested routes */}
             <Route
               path="/admin/*"
-              element={
-                <ProtectedAdmin>
-                  <AdminLayout />
-                </ProtectedAdmin>
-              }
+              element={<AdminLayout />}
             >
               {/* Default dashboard shows welcome message */}
               <Route index element={<></>} />
@@ -77,8 +68,7 @@ function App() {
               {/* Categories CRUD */}
               <Route path="categories" element={<Categories />} />
 
-              {/* Users and Orders */}
-              <Route path="users" element={<Users />} />
+              {/* Orders */}
               <Route path="orders" element={<Orders />} />
             </Route>
 

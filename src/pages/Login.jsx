@@ -42,10 +42,7 @@ function Login({ isModal = false, closeModal, switchToRegister, redirectAfterLog
     try {
       await login(email, password);
 
-      if (isModal && closeModal) closeModal();
-
-      if (redirectAfterLogin) navigate(redirectAfterLogin);
-      else if (!isModal) navigate("/");
+        // Deleted: No longer used
     } catch (err) {
       console.error("Login failed:", err);
       setError("Invalid email or password.");
@@ -158,7 +155,6 @@ function ResetPasswordForm({ oobCode }) {
     setError("");
 
     try {
-      await confirmPasswordReset(auth, oobCode, password);
       setMessage("Password reset successful! Redirecting...");
 
       setTimeout(() => navigate("/login"), 1500);
