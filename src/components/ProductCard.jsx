@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/useCart";
 import { Chip } from "@mui/material";
 import { ShoppingBag } from "@mui/icons-material";
+import ImageZoomModal from "./ImageZoomModal";
 
 function ProductCard({ product }) {
   const { cartItems, addToCart } = useCart();
   const [isAdded, setIsAdded] = useState(false);
   const [showCartPopup, setShowCartPopup] = useState(false);
+  const [showZoomModal, setShowZoomModal] = useState(false);
   const navigate = useNavigate();
 
   const isInCart = cartItems.some((item) => item.id === product.id);
@@ -44,12 +46,33 @@ function ProductCard({ product }) {
       )}
 
       {/* IMAGE */}
-      <div className="relative h-64 sm:h-72 overflow-hidden bg-gray-100">
+      <div
+        className="relative h-64 sm:h-72 overflow-hidden bg-gray-100 cursor-pointer group/image"
+        onClick={() => setShowZoomModal(true)}
+      >
         <img
           src={product.image}
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
+        {/* Zoom Icon Indicator */}
+        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/image:bg-opacity-20 transition-all flex items-center justify-center">
+          <div className="opacity-0 group-hover/image:opacity-100 transition-opacity">
+            <svg
+              className="w-8 h-8 text-white drop-shadow-lg"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+        </div>
       </div>
 
       {/* PRODUCT INFO */}
@@ -96,6 +119,14 @@ function ProductCard({ product }) {
             </div>
           </div>
         )}
+
+        {/* Image Zoom Modal */}
+        <ImageZoomModal
+          isOpen={showZoomModal}
+          imageUrl={product.image}
+          imageName={product.name}
+          onClose={() => setShowZoomModal(false)}
+        />
       </div>
     </div>
   );
