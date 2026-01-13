@@ -29,6 +29,12 @@ function Navbar() {
 
           <div className="flex items-center gap-6">
             <Link
+              to="/admin/products"
+              className="hidden sm:inline-flex items-center px-3 py-2 text-sm font-semibold text-blue-700 border border-blue-200 rounded-lg hover:border-blue-600 hover:text-blue-800 transition-colors"
+            >
+              Admin Panel
+            </Link>
+            <Link
               to="/cart"
               className="relative flex items-center text-blue-600 hover:text-blue-800 transition font-medium"
             >
@@ -53,6 +59,12 @@ function Navbar() {
           <a href="#contact" className="hover:text-blue-600 transition">
             Contact
           </a>
+          <Link
+            to="/admin/products"
+            className="text-blue-700 hover:text-blue-800 transition font-semibold"
+          >
+            Admin Panel
+          </Link>
         </div>
       </div>
     </nav>

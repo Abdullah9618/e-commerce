@@ -1,10 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X, ZoomIn, ZoomOut } from "lucide-react";
 
 function ImageZoomModal({ isOpen, imageUrl, imageName, onClose }) {
   const [zoom, setZoom] = useState(1);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (!isOpen) return;
+    setZoom(1);
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+      if (e.key === "+" || e.key === "=") {
+        setZoom((prev) => Math.min(prev + 0.2, 3));
+      }
+      if (e.key === "-" || e.key === "_") {
+        setZoom((prev) => Math.max(prev - 0.2, 1));
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
 
   const handleZoomIn = () => {
     setZoom((prev) => Math.min(prev + 0.2, 3));
@@ -18,16 +36,30 @@ function ImageZoomModal({ isOpen, imageUrl, imageName, onClose }) {
     setZoom(1);
   };
 
+  const handleWheel = (e) => {
+    e.preventDefault();
+    const delta = e.deltaY < 0 ? 0.1 : -0.1;
+    setZoom((prev) => {
+      const next = prev + delta;
+      return Math.min(3, Math.max(1, parseFloat(next.toFixed(2))));
+    });
+  };
+
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
   };
 
+  if (!isOpen) return null;
+
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
       onClick={handleBackdropClick}
+      onWheel={handleWheel}
+      role="dialog"
+      aria-modal="true"
     >
       {/* Close Button */}
       <button
@@ -92,8 +124,9 @@ function ImageZoomModal({ isOpen, imageUrl, imageName, onClose }) {
       </div>
 
       {/* Hint Text */}
-      <div className="absolute top-6 left-6 text-white text-sm">
-        Double-click image to reset zoom
+      <div className="absolute top-6 left-6 text-white text-sm space-y-1">
+        <p>Double-click image to reset zoom.</p>
+        <p>Use + / - keys or scroll to zoom. Tap outside or press Esc to close.</p>
       </div>
     </div>
   );
