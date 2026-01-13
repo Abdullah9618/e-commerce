@@ -54,9 +54,10 @@ function ImageZoomModal({ isOpen, imageUrl, imageName, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-transparent"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-[1px]"
       onClick={handleBackdropClick}
       onMouseDown={handleBackdropClick}
+      onPointerDown={handleBackdropClick}
       onWheel={handleWheel}
       role="dialog"
       aria-modal="true"
@@ -86,6 +87,8 @@ function ImageZoomModal({ isOpen, imageUrl, imageName, onClose }) {
           <img
             src={imageUrl}
             alt={imageName}
+            loading="lazy"
+            decoding="async"
             className="max-w-full max-h-[80vh] object-contain rounded-lg"
             onDoubleClick={handleResetZoom}
           />
