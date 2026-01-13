@@ -122,6 +122,7 @@ function ProductCard({ product }) {
 
         {/* Image Zoom Modal */}
         <ImageZoomModal
+          key={showZoomModal ? `${product.id}-open` : `${product.id}-closed`}
           isOpen={showZoomModal}
           imageUrl={product.image}
           imageName={product.name}

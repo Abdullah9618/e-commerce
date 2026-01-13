@@ -6,7 +6,6 @@ function ImageZoomModal({ isOpen, imageUrl, imageName, onClose }) {
 
   useEffect(() => {
     if (!isOpen) return;
-    setZoom(1);
 
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
@@ -55,8 +54,9 @@ function ImageZoomModal({ isOpen, imageUrl, imageName, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-transparent"
       onClick={handleBackdropClick}
+      onMouseDown={handleBackdropClick}
       onWheel={handleWheel}
       role="dialog"
       aria-modal="true"
@@ -71,9 +71,13 @@ function ImageZoomModal({ isOpen, imageUrl, imageName, onClose }) {
       </button>
 
       {/* Image Container */}
-      <div className="relative flex items-center justify-center w-full h-full max-w-4xl max-h-[90vh] overflow-hidden">
+      <div
+        className="relative flex items-center justify-center w-full h-full max-w-4xl max-h-[90vh] overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
+      >
         <div
-          className="flex items-center justify-center"
+          className="flex items-center justify-center drop-shadow-2xl"
           style={{
             transform: `scale(${zoom})`,
             transition: "transform 0.3s ease-in-out",
@@ -82,7 +86,7 @@ function ImageZoomModal({ isOpen, imageUrl, imageName, onClose }) {
           <img
             src={imageUrl}
             alt={imageName}
-            className="max-w-full max-h-[80vh] object-contain"
+            className="max-w-full max-h-[80vh] object-contain rounded-lg"
             onDoubleClick={handleResetZoom}
           />
         </div>
