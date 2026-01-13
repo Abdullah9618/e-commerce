@@ -11,6 +11,13 @@ function Hero() {
             src={heroImg}
             alt="Subhan Arts Collection"
             className="w-full max-w-none h-[520px] object-cover block"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+            sizes="100vw"
+            width={1920}
+            height={520}
+            style={{ backgroundColor: "#0f172a" }}
           />
 
           {/* Text overlay (no opacity on image) */}

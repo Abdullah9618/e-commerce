@@ -53,7 +53,11 @@ function ProductCard({ product }) {
         <img
           src={product.image}
           alt={product.name}
+          loading="lazy"
+          decoding="async"
+          fetchpriority="low"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
         {/* Zoom Icon Indicator */}
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/image:bg-opacity-20 transition-all flex items-center justify-center">
